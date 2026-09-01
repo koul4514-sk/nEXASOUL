@@ -1,0 +1,755 @@
+/* ==========================================================================
+   Aura Detector — Colorful Aura Universe Redesign
+   Visual-only redesign. All original selectors, IDs and classes preserved.
+   ========================================================================== */
+
+/*
+  CSS Custom Properties (Variables)
+*/
+:root {
+    --primary-color: #A855F7;       /* Aura purple */
+    --primary-hover: #C026D3;       /* Aura magenta (hover) */
+    --secondary-color: #06B6D4;     /* Aura cyan */
+    --bg-color: #120B24;            /* Deep aura-night base (used behind gradients) */
+    --card-bg: rgba(28, 18, 54, 0.55);   /* Translucent glass card surface */
+    --text-dark: #F5F3FF;           /* Primary text (light, for colorful bg) */
+    --text-muted: #C7BCE6;          /* Secondary text */
+    --border-color: rgba(255, 255, 255, 0.14); /* Subtle glass border */
+    --accent-glow: rgba(168, 85, 247, 0.18);   /* Accent highlight background */
+
+    --aura-purple: #A855F7;
+    --aura-pink: #EC4899;
+    --aura-magenta: #D946EF;
+    --aura-blue: #3B82F6;
+    --aura-cyan: #22D3EE;
+    --aura-yellow: #FACC15;
+    --aura-orange: #FB923C;
+    --aura-green: #34D399;
+    --aura-red: #F87171;
+
+    --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    --border-radius: 16px;
+    --transition-speed: 0.25s;
+}
+
+/* Base Reset & Reset Box Model */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+@keyframes auraDrift {
+    0%   { background-position: 0% 0%, 100% 0%, 50% 100%, 0% 50%; }
+    50%  { background-position: 10% 10%, 90% 15%, 45% 90%, 5% 60%; }
+    100% { background-position: 0% 0%, 100% 0%, 50% 100%, 0% 50%; }
+}
+
+@keyframes shimmerSweep {
+    0%   { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+@keyframes softPulse {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.72; }
+}
+
+@keyframes gentleFloat {
+    0%, 100% { transform: translateY(0px); }
+    50%      { transform: translateY(-6px); }
+}
+
+@keyframes resultReveal {
+    from { opacity: 0; transform: translateY(14px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-color);
+    background-image:
+        radial-gradient(circle at 15% 20%, rgba(168, 85, 247, 0.55), transparent 45%),
+        radial-gradient(circle at 85% 15%, rgba(34, 211, 238, 0.45), transparent 50%),
+        radial-gradient(circle at 50% 85%, rgba(236, 72, 153, 0.42), transparent 55%),
+        radial-gradient(circle at 5% 60%, rgba(251, 146, 60, 0.30), transparent 45%),
+        linear-gradient(180deg, #14092B 0%, #170B33 40%, #0F0A26 100%);
+    background-attachment: fixed;
+    background-size: 140% 140%, 150% 150%, 160% 160%, 130% 130%, 100% 100%;
+    animation: auraDrift 26s ease-in-out infinite;
+    color: var(--text-dark);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* Subtle grain overlay for texture, CSS-only */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.05;
+    background-image: repeating-radial-gradient(circle at 0 0, transparent 0, rgba(255,255,255,0.6) 1px, transparent 2px);
+    background-size: 3px 3px;
+    mix-blend-mode: overlay;
+}
+
+/* Helper Container */
+.container {
+    width: 90%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 16px;
+    position: relative;
+    z-index: 1;
+}
+
+/* ==========================================================================
+   Header & Navigation
+   ========================================================================== */
+.navbar {
+    background: linear-gradient(120deg, rgba(30, 16, 58, 0.65), rgba(20, 12, 46, 0.65));
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid transparent;
+    border-image: linear-gradient(90deg, var(--aura-purple), var(--aura-cyan), var(--aura-pink)) 1;
+    padding: 14px 0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    box-shadow: 0 4px 30px rgba(168, 85, 247, 0.15);
+}
+
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-img {
+    height: 42px;
+    width: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.6));
+    border-radius: 10px;
+}
+
+.logo-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.logo-brand {
+    font-weight: 800;
+    font-size: 1.25rem;
+    line-height: 1.2;
+    background: linear-gradient(90deg, var(--aura-purple), var(--aura-pink), var(--aura-cyan));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.logo-sub {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.navbar nav a {
+    position: relative;
+    color: var(--text-dark);
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 20px;
+    padding-bottom: 4px;
+    transition: color var(--transition-speed), text-shadow var(--transition-speed), transform var(--transition-speed);
+}
+
+.navbar nav a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0%;
+    height: 2px;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--aura-purple), var(--aura-cyan));
+    transition: width var(--transition-speed);
+}
+
+.navbar nav a:hover {
+    color: #FFFFFF;
+    text-shadow: 0 0 12px rgba(217, 70, 239, 0.8);
+    transform: translateY(-1px);
+}
+
+.navbar nav a:hover::after {
+    width: 100%;
+}
+
+/* ==========================================================================
+   Shared Component Styles (Cards & Buttons)
+   ========================================================================== */
+.card {
+    background: linear-gradient(160deg, rgba(45, 25, 82, 0.55), rgba(24, 14, 50, 0.55));
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 32px;
+    margin-bottom: 32px;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.35),
+        0 0 0 1px rgba(255, 255, 255, 0.03) inset,
+        0 0 40px rgba(168, 85, 247, 0.08);
+    position: relative;
+    overflow: hidden;
+    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: var(--border-radius);
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.5), rgba(34, 211, 238, 0.15), rgba(236, 72, 153, 0.4));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+}
+
+.card:hover {
+    box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.04) inset,
+        0 0 55px rgba(168, 85, 247, 0.16);
+}
+
+.hero-badge-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(90deg, rgba(168, 85, 247, 0.25), rgba(34, 211, 238, 0.2));
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 4px 14px;
+    border-radius: 50px;
+    margin-bottom: 16px;
+}
+
+.badge-icon {
+    width: 18px;
+    height: 18px;
+}
+
+.badge {
+    background: linear-gradient(90deg, var(--aura-cyan), var(--aura-pink));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.btn {
+    display: inline-block;
+    padding: 13px 26px;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: transform var(--transition-speed), box-shadow var(--transition-speed), filter var(--transition-speed);
+}
+
+.btn:active {
+    transform: translateY(1px) scale(0.98);
+}
+
+.btn-primary {
+    background: linear-gradient(90deg, var(--aura-purple), var(--aura-magenta), var(--aura-cyan));
+    background-size: 200% 100%;
+    color: #FFFFFF;
+    box-shadow: 0 6px 24px rgba(217, 70, 239, 0.45), 0 0 0 1px rgba(255,255,255,0.08) inset;
+}
+
+.btn-primary:hover {
+    background-position: 100% 0;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 32px rgba(217, 70, 239, 0.6), 0 0 24px rgba(34, 211, 238, 0.4);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-dark);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.14);
+    transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   Section 1: Hero Section
+   ========================================================================== */
+.hero-section {
+    padding: 70px 0 44px 0;
+    text-align: center;
+    position: relative;
+}
+
+.hero-section::before {
+    content: "";
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 340px;
+    height: 340px;
+    background: radial-gradient(circle, rgba(168, 85, 247, 0.35), rgba(34, 211, 238, 0.15) 55%, transparent 75%);
+    filter: blur(20px);
+    z-index: -1;
+    animation: gentleFloat 8s ease-in-out infinite;
+}
+
+.hero-title {
+    font-size: 2.9rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    background: linear-gradient(90deg, var(--aura-purple), var(--aura-pink), var(--aura-cyan), var(--aura-purple));
+    background-size: 300% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shimmerSweep 7s linear infinite;
+    filter: drop-shadow(0 0 18px rgba(168, 85, 247, 0.35));
+}
+
+.hero-tagline {
+    font-size: 1.3rem;
+    font-weight: 600;
+    background: linear-gradient(90deg, var(--aura-cyan), var(--aura-pink));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 16px;
+}
+
+.hero-description {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 500px;
+    margin: 0 auto 28px auto;
+}
+
+/* ==========================================================================
+   Section 2: About Section
+   ========================================================================== */
+.about-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.about-logo {
+    height: 36px;
+    width: auto;
+    border-radius: 8px;
+}
+
+.about-card h2 {
+    font-size: 1.4rem;
+    background: linear-gradient(90deg, var(--aura-purple), var(--aura-cyan));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.about-card p {
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+
+/* ==========================================================================
+   Section 3: Quiz Section
+   ========================================================================== */
+.quiz-header {
+    margin-bottom: 24px;
+}
+
+#question-progress {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.progress-bar-bg {
+    width: 100%;
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    margin-top: 8px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    width: 10%;
+    background: linear-gradient(90deg, var(--aura-purple), var(--aura-pink), var(--aura-cyan), var(--aura-blue));
+    background-size: 300% 100%;
+    border-radius: 6px;
+    box-shadow: 0 0 14px rgba(217, 70, 239, 0.6);
+    transition: width 0.3s ease;
+    animation: shimmerSweep 3.5s linear infinite;
+    position: relative;
+}
+
+.question-box h2 {
+    font-size: 1.4rem;
+    margin-bottom: 22px;
+    color: var(--text-dark);
+}
+
+.options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.option-btn {
+    width: 100%;
+    text-align: left;
+    padding: 15px 18px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-dark);
+    cursor: pointer;
+    transition: transform var(--transition-speed), border-color var(--transition-speed), background var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+.option-btn:hover {
+    background: linear-gradient(90deg, rgba(168, 85, 247, 0.18), rgba(34, 211, 238, 0.12));
+    border-color: var(--aura-cyan);
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 6px 20px rgba(34, 211, 238, 0.2);
+}
+
+.option-btn:active {
+    transform: translateY(0) scale(0.99);
+}
+
+.option-btn.selected {
+    background: linear-gradient(90deg, rgba(168, 85, 247, 0.35), rgba(217, 70, 239, 0.3));
+    border-color: var(--aura-magenta);
+    font-weight: 700;
+    color: #FFFFFF;
+    box-shadow: 0 0 0 1px rgba(217, 70, 239, 0.4) inset, 0 6px 24px rgba(217, 70, 239, 0.35);
+}
+
+.warning-text {
+    color: var(--aura-orange);
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+    text-shadow: 0 0 12px rgba(251, 146, 60, 0.4);
+}
+
+.quiz-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+/* ==========================================================================
+   Section 4: Result Section
+   ========================================================================== */
+.result-card {
+    text-align: center;
+    padding: 44px 24px;
+    position: relative;
+    animation: resultReveal 0.6s ease-out;
+}
+
+.score-display {
+    margin: 20px 0;
+    position: relative;
+}
+
+.score-display::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 220px;
+    height: 220px;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(217, 70, 239, 0.28), transparent 70%);
+    filter: blur(6px);
+    z-index: -1;
+}
+
+#final-score {
+    font-size: 4.4rem;
+    font-weight: 800;
+    background: linear-gradient(90deg, var(--aura-purple), var(--aura-pink), var(--aura-cyan));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shimmerSweep 5s linear infinite, softPulse 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 20px rgba(217, 70, 239, 0.4));
+}
+
+.total-score {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.aura-level-box {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.25), rgba(34, 211, 238, 0.15));
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 18px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 20px;
+    min-width: 250px;
+    box-shadow: 0 0 30px rgba(168, 85, 247, 0.15);
+}
+
+.level-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    display: block;
+}
+
+#aura-level-title {
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin-top: 4px;
+    background: linear-gradient(90deg, var(--aura-cyan), var(--aura-pink));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.aura-description {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 550px;
+    margin: 0 auto 28px auto;
+}
+
+/* ==========================================================================
+   Section 5: Educational / Challenge Section
+   ========================================================================== */
+.challenge-section {
+    padding: 20px 0 40px 0;
+}
+
+.challenge-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.challenge-header h2 {
+    font-size: 1.6rem;
+    margin-bottom: 8px;
+    background: linear-gradient(90deg, var(--aura-orange), var(--aura-pink));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.challenge-intro {
+    color: var(--text-muted);
+    font-size: 1rem;
+}
+
+.challenge-card {
+    border: 2px dashed transparent;
+    border-image: linear-gradient(90deg, var(--aura-purple), var(--aura-orange), var(--aura-pink)) 1;
+    background: linear-gradient(160deg, rgba(45, 25, 82, 0.45), rgba(24, 14, 50, 0.45));
+    text-align: center;
+}
+
+.challenge-brand-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.challenge-logo {
+    height: 48px;
+    width: auto;
+    border-radius: 10px;
+}
+
+.challenge-badge {
+    display: inline-block;
+    font-weight: 700;
+    font-size: 1.1rem;
+    background: linear-gradient(90deg, var(--aura-orange), var(--aura-magenta));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.challenge-card h3 {
+    margin-bottom: 12px;
+    color: var(--text-dark);
+}
+
+.challenge-card p {
+    color: var(--text-muted);
+    margin-bottom: 20px;
+}
+
+.perks-box {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.perk-tag {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid var(--border-color);
+    padding: 7px 16px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    transition: border-color var(--transition-speed), transform var(--transition-speed);
+}
+
+.perk-tag:hover {
+    border-color: var(--aura-cyan);
+    transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   Section 6: Footer
+   ========================================================================== */
+.footer {
+    margin-top: auto;
+    background: linear-gradient(180deg, rgba(20, 12, 46, 0.7), rgba(14, 8, 34, 0.9));
+    border-top: 1px solid transparent;
+    border-image: linear-gradient(90deg, var(--aura-purple), var(--aura-cyan), var(--aura-pink)) 1;
+    padding: 32px 0 16px 0;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.footer-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.footer-logo {
+    height: 40px;
+    width: auto;
+    border-radius: 8px;
+}
+
+.footer-brand h3 {
+    font-size: 1.2rem;
+    background: linear-gradient(90deg, var(--aura-purple), var(--aura-cyan));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.footer-brand p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.footer-motto p {
+    font-size: 0.95rem;
+    color: var(--text-dark);
+}
+
+.footer-bottom {
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+    padding-top: 16px;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* ==========================================================================
+   Responsive Design Rules (Mobile Compatibility)
+   ========================================================================== */
+@media (max-width: 600px) {
+    .hero-title {
+        font-size: 2.1rem;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+    }
+
+    .navbar .container {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .navbar nav a {
+        margin: 0 10px;
+    }
+
+    #final-score {
+        font-size: 3.2rem;
+    }
+
+    .aura-level-box {
+        min-width: 0;
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body,
+    .hero-title,
+    #final-score,
+    .progress-bar-fill,
+    .hero-section::before {
+        animation: none !important;
+    }
+}
